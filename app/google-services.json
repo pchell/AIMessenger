@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "684091071303",
+    "firebase_url": "https://aimessenger-1751d-default-rtdb.firebaseio.com",
+    "project_id": "aimessenger-1751d",
+    "storage_bucket": "aimessenger-1751d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684091071303:android:fd6df7e226628028d74a62",
+        "android_client_info": {
+          "package_name": "com.maveri.aimessenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684091071303-4a1adujn022upebt8skr2p3g5intdknp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVxZO8TWyAmJVvVEsWkPi-9UXl-yzAnJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "684091071303-4a1adujn022upebt8skr2p3g5intdknp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
