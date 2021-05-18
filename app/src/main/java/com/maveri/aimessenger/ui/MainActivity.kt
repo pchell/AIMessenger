@@ -2,8 +2,8 @@ package com.maveri.aimessenger.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import com.maveri.aimessenger.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,11 +30,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun render(viewState: MainViewState) {
-        when (viewState.authStatus) {
-            is AuthFirebaseStatus.Success -> binding.mainStartSearchButton.isEnabled = true
-            is AuthFirebaseStatus.Error -> binding.mainStartSearchButton.isEnabled = false
+        if (!viewState.token.isNullOrEmpty()) {
+            Toast.makeText(this, viewState.token, Toast.LENGTH_LONG).show()
+        } else {
+            when (viewState.authStatus) {
+                is AuthFirebaseStatus.Success -> binding.mainStartSearchButton.isEnabled = true
+                is AuthFirebaseStatus.Error -> binding.mainStartSearchButton.isEnabled = false
+            }
         }
     }
-
-
 }
