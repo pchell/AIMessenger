@@ -5,12 +5,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import io.reactivex.rxjava3.annotations.NonNull
+import com.maveri.aimessenger.ui.main.MainViewState
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableEmitter
-import io.reactivex.rxjava3.core.ObservableOnSubscribe
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 import kotlin.random.Random
@@ -21,8 +18,11 @@ class FirebaseRepository @Inject constructor(
 ) {
 
     companion object {
-        const val DATABASE_ROOT_SEARCH = "search"
-    }
+        const val DATABASE_ROOT_ROOMS = "search"
+
+        const val MIN_RANDOM_NUMBER = 0
+        const val MAX_RANDOM_NUMBER = 100000
+     }
 
     fun signInAnonymously(): Completable {
         return Completable.create { emitter ->
@@ -37,20 +37,22 @@ class FirebaseRepository @Inject constructor(
         }.subscribeOn(Schedulers.single());
     }
 
-    fun startUserSearch(): Observable<String> {
+    fun startUserSearch(): Observable<MainViewState.Room> {
         return Observable.create { emitter ->
             firebaseAuth.currentUser?.let {
-                val databaseReference = firebaseDatabase.getReference(DATABASE_ROOT_SEARCH)
-                databaseReference.child(it.uid).setValue("true")
+                val databaseReference = firebaseDatabase.getReference(DATABASE_ROOT_ROOMS)
                 databaseReference.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        val keys = (snapshot.value as HashMap<String, String>)
-                            .filterKeys { key -> key != it.uid }.keys.toList()
+                        val keys = (snapshot.value as HashMap<String, HashMap<*, *>>)
+                            .filterValues { item -> item.size == 1 }.keys.toList()
                         if (keys.isNotEmpty()) {
-                            if (keys.size == 1)
-                                emitter.onNext(it.uid + " - " + keys[0])
-                            else
-                                emitter.onNext(it.uid + " - " + keys[Random.nextInt(0, keys.size - 1)])
+                            databaseReference.child(keys[0]).child(it.uid).setValue("true")
+                            emitter.onNext(MainViewState.Room(keys[0], false))
+                        } else {
+                            val personalRoomId = it.uid + Random.nextInt(MIN_RANDOM_NUMBER, MAX_RANDOM_NUMBER)
+                            databaseReference.child(personalRoomId).child(it.uid).setValue("true")
+                            databaseReference.removeEventListener(this)
+                            emitter.onNext(MainViewState.Room(personalRoomId, true))
                         }
                     }
 

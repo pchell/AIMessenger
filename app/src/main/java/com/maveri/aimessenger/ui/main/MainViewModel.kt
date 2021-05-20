@@ -1,4 +1,4 @@
-package com.maveri.aimessenger.ui
+package com.maveri.aimessenger.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,16 +14,18 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val firebaseRepository: FirebaseRepository): ViewModel() {
 
-    val viewState: MutableLiveData<MainViewState> = MutableLiveData()
+    val viewState: MutableLiveData<MainViewState.State> = MutableLiveData()
 
     fun signInAnonymously() {
         firebaseRepository.signInAnonymously().subscribe(object : DisposableCompletableObserver() {
             override fun onComplete() {
-                viewState.value = MainViewState(authStatus = AuthFirebaseStatus.Success )
+                viewState.value =
+                    MainViewState.State(authStatus = MainViewState.AuthFirebaseStatus.Success)
             }
 
             override fun onError(e: Throwable?) {
-                viewState.value = MainViewState(authStatus = AuthFirebaseStatus.Error )
+                viewState.value =
+                    MainViewState.State(authStatus = MainViewState.AuthFirebaseStatus.Error)
             }
 
         })
@@ -33,13 +35,12 @@ class MainViewModel @Inject constructor(private val firebaseRepository: Firebase
         firebaseRepository.startUserSearch()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<String> {
+            .subscribe(object : Observer<MainViewState.Room> {
                 override fun onSubscribe(item: Disposable) {
-
                 }
 
-                override fun onNext(token: String) {
-                    viewState.value = MainViewState(token = token)
+                override fun onNext(room: MainViewState.Room) {
+                    viewState.value = MainViewState.State(room = room)
                 }
 
                 override fun onError(e: Throwable) {
