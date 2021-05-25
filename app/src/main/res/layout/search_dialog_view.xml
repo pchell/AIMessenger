@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="300dp"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/layout_bg"
         android:orientation="vertical"
@@ -29,17 +29,18 @@
         <ProgressBar
             android:id="@+id/login_progressbar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:visibility="invisible" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_no"
+            android:id="@+id/btn_no_search"
             android:layout_width="80dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
+            android:layout_margin="10dp"
             android:background="@drawable/button_bg"
             android:clickable="true"
             android:padding="0dp"

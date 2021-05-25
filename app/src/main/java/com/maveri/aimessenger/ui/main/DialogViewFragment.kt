@@ -12,15 +12,9 @@ import kotlinx.android.synthetic.main.search_dialog_view.*
 class DialogViewFragment : Fragment(){
 
     private var _binding: SearchDialogViewBinding? = null
-    // This property is only valid between onCreateView and
-// onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = SearchDialogViewBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
