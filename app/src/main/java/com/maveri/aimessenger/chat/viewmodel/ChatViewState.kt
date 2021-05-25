@@ -1,4 +1,4 @@
-package com.maveri.aimessenger.ui.chat
+package com.maveri.aimessenger.chat.viewmodel
 
 interface ChatViewState {
     sealed class State ()

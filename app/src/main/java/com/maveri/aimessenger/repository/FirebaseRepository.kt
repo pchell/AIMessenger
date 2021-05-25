@@ -5,7 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.maveri.aimessenger.ui.main.MainViewState
+import com.maveri.aimessenger.main.viewmodel.MainViewState
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -47,6 +47,7 @@ class FirebaseRepository @Inject constructor(
                             .filterValues { item -> item.size == 1 }.keys.toList()
                         if (keys.isNotEmpty()) {
                             databaseReference.child(keys[0]).child(it.uid).setValue("true")
+                            databaseReference.removeEventListener(this)
                             emitter.onNext(MainViewState.Room(keys[0], false))
                         } else {
                             val personalRoomId = it.uid + Random.nextInt(MIN_RANDOM_NUMBER, MAX_RANDOM_NUMBER)

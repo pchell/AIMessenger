@@ -1,4 +1,4 @@
-package com.maveri.aimessenger.ui.main
+package com.maveri.aimessenger.main.viewmodel
 
 interface MainViewState {
     data class State (

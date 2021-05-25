@@ -1,4 +1,4 @@
-package com.maveri.aimessenger.ui.main
+package com.maveri.aimessenger.main.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

@@ -2,37 +2,33 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_graph">
+    android:id="@+id/main_graph"
+    app:startDestination="@id/mainFragment">
 
-    <activity
-        android:id="@+id/chatActivity"
-        android:name="com.maveri.aimessenger.ui.chat.ChatActivity"
-        tools:layout="@layout/activity_chat" >
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.maveri.aimessenger.main.view.MainFragment"
+        tools:layout="@layout/chat_fragment">
+
+        <action
+            android:id="@+id/to_chat"
+            app:destination="@id/chatFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.maveri.aimessenger.chat.view.ChatFragment"
+        tools:layout="@layout/chat_fragment">
         <argument
             android:name="roomId"
+            android:defaultValue="@null"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="isMyRoom"
-            app:argType="boolean"
-            android:defaultValue="false" />
-    </activity>
-    <fragment
-        android:id="@+id/dialogViewFragment"
-        android:name="com.maveri.aimessenger.ui.main.DialogViewFragment"
-        android:label="DialogViewFragment" >
-        <action
-            android:id="@+id/action_dialogViewFragment_to_chatActivity"
-            app:destination="@id/chatActivity" />
-        <action
-            android:id="@+id/action_dialogViewFragment_to_mainActivity"
-            app:destination="@id/mainActivity" />
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
-    <activity
-        android:id="@+id/mainActivity"
-        android:name="com.maveri.aimessenger.ui.main.MainActivity"
-        android:label="activity_main"
-        tools:layout="@layout/activity_main" />
 
 </navigation>

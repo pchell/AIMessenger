@@ -11,7 +11,6 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object FirebaseModule {
-
     @Provides
     fun provideFirebaseDatabase() = FirebaseDatabase.getInstance()
 
