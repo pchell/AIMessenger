@@ -1,19 +1,15 @@
-package com.maveri.aimessenger.main.widget;
+package com.maveri.aimessenger.room.widget
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import com.maveri.aimessenger.databinding.SearchDialogViewBinding
-import kotlinx.android.synthetic.main.search_dialog_view.*
+import com.maveri.aimessenger.databinding.RoomStateDialogViewBinding
 
+class RoomStateDialogFragment : DialogFragment() {
 
-class SearchDialogFragment : DialogFragment() {
-
-    private lateinit var binding: SearchDialogViewBinding
+    private lateinit var binding: RoomStateDialogViewBinding
 
     private var buttonOnClickListener: View.OnClickListener? = null
 
@@ -21,14 +17,14 @@ class SearchDialogFragment : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = SearchDialogViewBinding.inflate(inflater, container, false)
+    ): View? {
+        binding = RoomStateDialogViewBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.searchCancel.setOnClickListener {
+        binding.roomDisconnect.setOnClickListener {
             dismiss()
             buttonOnClickListener?.onClick(it)
         }
@@ -37,8 +33,8 @@ class SearchDialogFragment : DialogFragment() {
     class Builder(
         val clickListener: View.OnClickListener? = null,
     ) {
-        fun build(): SearchDialogFragment {
-            return SearchDialogFragment().apply {
+        fun build(): RoomStateDialogFragment {
+            return RoomStateDialogFragment().apply {
                 buttonOnClickListener = clickListener
             }
         }

@@ -21,23 +21,24 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:text="@string/search_loading"
+            android:text="@string/chat_disconnect_title"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <ProgressBar
+        <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:indeterminateTint="?attr/colorPrimary" />
+            android:src="@drawable/ic_face"
+            app:tint="?attr/colorPrimary" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/search_cancel"
+            android:id="@+id/room_disconnect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_10"
-            android:text="@string/search_cancel" />
+            android:text="@string/chat_disconnect" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

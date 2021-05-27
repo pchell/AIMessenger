@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">AIMessenger</string>
-
-    <string name="search_loading">Идет поиск чата...</string>
-    <string name="search_cancel">Отмена</string>
 </resources>

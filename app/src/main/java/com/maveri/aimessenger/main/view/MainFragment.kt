@@ -16,9 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
-
     private lateinit var binding: MainFragmentBinding
     private val viewModel by viewModels<MainViewModel>()
+
+    private var searchDialog: SearchDialogFragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +34,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.viewState.observe(viewLifecycleOwner, {
-            render(it)
+            it?.let { render(it) }
         })
 
         viewModel.signInAnonymously()
@@ -43,19 +44,25 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun render(viewState: MainViewState.State) {
+    private fun render(viewState: MainViewState.State?) {
         if (viewState.room != null) {
-            if (viewState.room.isMyRoom) {
-                SearchDialogFragment.Builder(
-                    negativeListener = {
-
-                    },
-                    positiveListener = {
-
-                    }
-                ).build().show(parentFragmentManager, null)
-            } else {
-                findNavController().navigate(MainFragmentDirections.toChat())
+            when {
+                viewState.room.isDisconnect -> {
+                    searchDialog?.dismiss()
+                }
+                viewState.room.isReadyStart -> {
+                    searchDialog?.dismiss()
+                    findNavController().navigate(MainFragmentDirections.toChat(roomId = viewState.room.roomId))
+                }
+                else -> {
+                    viewModel.checkRoomChanges(viewState.room.roomId, true)
+                    searchDialog = SearchDialogFragment.Builder(
+                        clickListener = {
+                            viewModel.disconnectFromRoom(viewState.room.roomId)
+                        }
+                    ).build()
+                    searchDialog?.show(parentFragmentManager, null)
+                }
             }
             Toast.makeText(context, viewState.token, Toast.LENGTH_LONG).show()
         } else {
@@ -66,5 +73,11 @@ class MainFragment : Fragment() {
                     false
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.viewState.value = null
+        viewModel.viewState.removeObservers(viewLifecycleOwner)
     }
 }

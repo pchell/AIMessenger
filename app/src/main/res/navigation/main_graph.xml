@@ -8,23 +8,21 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.maveri.aimessenger.main.view.MainFragment"
-        tools:layout="@layout/chat_fragment">
+        tools:layout="@layout/room_fragment">
 
         <action
             android:id="@+id/to_chat"
-            app:destination="@id/chatFragment" />
+            app:destination="@id/roomFragment" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.maveri.aimessenger.chat.view.ChatFragment"
-        tools:layout="@layout/chat_fragment">
+        android:id="@+id/roomFragment"
+        android:name="com.maveri.aimessenger.room.view.RoomFragment"
+        tools:layout="@layout/room_fragment">
         <argument
             android:name="roomId"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
+            app:argType="string" />
         <argument
             android:name="isMyRoom"
             android:defaultValue="false"
