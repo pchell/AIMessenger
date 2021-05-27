@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.maveri.aimessenger.main.view.MainFragment"
+        tools:layout="@layout/room_fragment">
+
+        <action
+            android:id="@+id/to_chat"
+            app:destination="@id/roomFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/roomFragment"
+        android:name="com.maveri.aimessenger.room.view.RoomFragment"
+        tools:layout="@layout/room_fragment">
+        <argument
+            android:name="roomId"
+            app:argType="string" />
+        <argument
+            android:name="isMyRoom"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+
+</navigation>

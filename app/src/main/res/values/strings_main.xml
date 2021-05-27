@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="start_button">Start search</string>
+
+    <string name="search_loading">Идет поиск чата…</string>
+    <string name="search_cancel">Отмена</string>
 </resources>
