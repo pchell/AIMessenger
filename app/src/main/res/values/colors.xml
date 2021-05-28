@@ -6,6 +6,10 @@
     <color name="teal_200">#7633ff</color>
     <color name="teal_700">#FF018786</color>
     <color name="purple">#7633ff</color>
+    <color name="light_purple">#774df2</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="color_divider">#807633ff</color>
+    <color name="color_gray">#C0C0C0</color>
+    <color name="color_light_gray">#eef1f6</color>
 </resources>

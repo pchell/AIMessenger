@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.maveri.aimessenger.model.Message
 import com.maveri.aimessenger.model.Room
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -20,6 +21,7 @@ class FirebaseRepository @Inject constructor(
     companion object {
         const val DATABASE_ROOT_ROOMS = "rooms"
         const val DATABASE_ROOT_USERS = "users"
+        const val DATABASE_ROOT_MESSAGES = "message"
 
         const val MIN_RANDOM_NUMBER = 0
         const val MAX_RANDOM_NUMBER = 100000
@@ -154,4 +156,43 @@ class FirebaseRepository @Inject constructor(
             }
         }
     }
+
+    /*fun getRoomMessages(roomId: String): Observable<Message> {
+        return Observable.create { emitter ->
+            firebaseAuth.currentUser?.let { user ->
+                val databaseReference =
+                    firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
+                databaseReference.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.value != null) {
+                            val message =
+                                (snapshot.value as HashMap<String, HashMap<*, *>>)[DATABASE_ROOT_MESSAGES]?.let {
+                                    it.filterKeys { item ->
+                                        !item.equals(user.uid)
+                                    }
+                                }
+
+
+
+                            if (!keys.isNullOrEmpty()) {
+                                if (isCheckRoomConnections) {
+                                    databaseReference.removeEventListener(this)
+                                    emitter.onNext(Room(roomId, true))
+                                }
+                            } else if (!isCheckRoomConnections) {
+                                databaseReference.removeEventListener(this)
+                                emitter.onNext(Room(roomId, isDisconnect = true))
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        databaseReference.removeEventListener(this)
+                        emitter.onError(error.toException())
+                    }
+                })
+
+            }
+        }
+    }*/
 }

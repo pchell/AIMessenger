@@ -12,5 +12,12 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="colorDivider">@color/color_divider</item>
+        <item name="colorDateTime">@color/color_gray</item>
+
+        <item name="colorCardMessage">@color/light_purple</item>
+        <item name="colorCardVariantMessage">@color/color_light_gray</item>
     </style>
+
 </resources>

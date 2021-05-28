@@ -2,4 +2,5 @@
 <resources>
     <string name="chat_disconnect_title">Упс…\nСобеседник отключился</string>
     <string name="chat_disconnect">Отключиться</string>
+    <string name="room_message">Сообщение...</string>
 </resources>
