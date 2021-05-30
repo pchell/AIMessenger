@@ -45,7 +45,7 @@ class MainFragment : Fragment() {
     }
 
     private fun render(viewState: MainViewState.State?) {
-        if (viewState.room != null) {
+        if (viewState?.room != null) {
             when {
                 viewState.room.isDisconnect -> {
                     searchDialog?.dismiss()
@@ -64,9 +64,9 @@ class MainFragment : Fragment() {
                     searchDialog?.show(parentFragmentManager, null)
                 }
             }
-            Toast.makeText(context, viewState.token, Toast.LENGTH_LONG).show()
+                //Toast.makeText(context, viewState.token, Toast.LENGTH_LONG).show()
         } else {
-            when (viewState.authStatus) {
+            when (viewState?.authStatus) {
                 is MainViewState.AuthFirebaseStatus.Success -> binding.mainStartSearchButton.isEnabled =
                     true
                 is MainViewState.AuthFirebaseStatus.Error -> binding.mainStartSearchButton.isEnabled =

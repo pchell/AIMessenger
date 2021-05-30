@@ -2,6 +2,7 @@ package com.maveri.aimessenger.room.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import com.maveri.aimessenger.room.viewmodel.RoomViewModel
 import com.maveri.aimessenger.room.viewmodel.RoomViewState
 import com.maveri.aimessenger.room.widget.RoomStateDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.room_fragment.*
 
 @AndroidEntryPoint
 class RoomFragment : Fragment() {
@@ -37,6 +39,20 @@ class RoomFragment : Fragment() {
         })
 
         viewModel.checkRoomChanges(args.roomId, false)
+
+        room_message.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                when (event?.action) {
+                    MotionEvent.ACTION_UP ->
+                        if(event.getX() >= (room_message.getRight() - room_message.getCompoundDrawables()[2].getBounds().width())){
+                            println(room_message.text.toString())
+                        }
+                }
+
+                return v?.onTouchEvent(event) ?: true
+            }
+        })
+
     }
 
     private fun render(viewState: RoomViewState.State) {
