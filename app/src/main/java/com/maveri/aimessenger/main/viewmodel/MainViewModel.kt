@@ -2,6 +2,7 @@ package com.maveri.aimessenger.main.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.maveri.aimessenger.model.Message
 import com.maveri.aimessenger.model.Room
 import com.maveri.aimessenger.repository.FirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -98,4 +99,6 @@ class MainViewModel @Inject constructor(private val firebaseRepository: Firebase
                 }
             })
     }
+
+
 }

@@ -45,7 +45,7 @@ class RoomFragment : Fragment() {
                 when (event?.action) {
                     MotionEvent.ACTION_UP ->
                         if(event.getX() >= (room_message.getRight() - room_message.getCompoundDrawables()[2].getBounds().width())){
-                            println(room_message.text.toString())
+                            viewModel.sendRoomMessage(args.roomId, false, room_message.text.toString())
                         }
                 }
 

@@ -79,10 +79,7 @@ class FirebaseRepository @Inject constructor(
         }
     }
 
-    fun checkRoomChanges(
-        roomId: String,
-        isCheckRoomConnections: Boolean
-    ): Observable<Room> {
+    fun checkRoomChanges(roomId: String, isCheckRoomConnections: Boolean): Observable<Room> {
         return Observable.create { emitter ->
             firebaseAuth.currentUser?.let { user ->
                 val databaseReference =
@@ -157,7 +154,46 @@ class FirebaseRepository @Inject constructor(
         }
     }
 
-    /*fun getRoomMessages(roomId: String): Observable<Message> {
+//    fun getRoomMessages(roomId: String, isCheckRoomConnections: Boolean): Observable<Message> {
+//        return Observable.create { emitter ->
+//            firebaseAuth.currentUser?.let { user ->
+//                val databaseReference =
+//                    firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
+//                databaseReference.addValueEventListener(object : ValueEventListener {
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        if (snapshot.value != null) {
+//                            val message =
+//                                (snapshot.value as HashMap<String, HashMap<*, *>>)[DATABASE_ROOT_MESSAGES]?.let {
+//                                    it.filterKeys { item ->
+//                                        !item.equals(user.uid)
+//                                    }
+//                                }
+//
+//
+//
+//                            if (!message.isNullOrEmpty()) {
+//                                if (isCheckRoomConnections) {
+//                                    databaseReference.removeEventListener(this)
+//                                    emitter.onNext(Room(roomId, true))
+//                                }
+//                            } else if (!isCheckRoomConnections) {
+//                                databaseReference.removeEventListener(this)
+//                                emitter.onNext(Room(roomId, isDisconnect = true))
+//                            }
+//                        }
+//                    }
+//
+//                    override fun onCancelled(error: DatabaseError) {
+//                        databaseReference.removeEventListener(this)
+//                        emitter.onError(error.toException())
+//                    }
+//                })
+//
+//            }
+//        }
+//    }
+
+    fun sendRoomMessage(roomId: String, isCheckRoomConnections: Boolean, message: String): Observable<Message> {
         return Observable.create { emitter ->
             firebaseAuth.currentUser?.let { user ->
                 val databaseReference =
@@ -165,24 +201,9 @@ class FirebaseRepository @Inject constructor(
                 databaseReference.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.value != null) {
-                            val message =
-                                (snapshot.value as HashMap<String, HashMap<*, *>>)[DATABASE_ROOT_MESSAGES]?.let {
-                                    it.filterKeys { item ->
-                                        !item.equals(user.uid)
-                                    }
-                                }
-
-
-
-                            if (!keys.isNullOrEmpty()) {
-                                if (isCheckRoomConnections) {
-                                    databaseReference.removeEventListener(this)
-                                    emitter.onNext(Room(roomId, true))
-                                }
-                            } else if (!isCheckRoomConnections) {
-                                databaseReference.removeEventListener(this)
-                                emitter.onNext(Room(roomId, isDisconnect = true))
-                            }
+                            databaseReference.child(DATABASE_ROOT_MESSAGES).child(user.uid).setValue(message)
+                            databaseReference.removeEventListener(this)
+                            emitter.onNext(Message(user.uid, message))
                         }
                     }
 
@@ -194,5 +215,5 @@ class FirebaseRepository @Inject constructor(
 
             }
         }
-    }*/
+    }
 }

@@ -1,5 +1,6 @@
 package com.maveri.aimessenger.main.viewmodel
 
+import com.maveri.aimessenger.model.Message
 import com.maveri.aimessenger.model.Room
 
 interface MainViewState {
