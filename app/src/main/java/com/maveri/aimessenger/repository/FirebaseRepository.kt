@@ -201,8 +201,17 @@ class FirebaseRepository @Inject constructor(
                 databaseReference.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.value != null) {
-                            databaseReference.child(DATABASE_ROOT_MESSAGES).child(user.uid).setValue(message)
-                            databaseReference.removeEventListener(this)
+                            val messages =
+                                (snapshot.value as HashMap<String, HashMap<*, *>>)[DATABASE_ROOT_MESSAGES]//Нужно получить под ветку сообщений для пользователя, я хз как!!!
+
+                            if (messages.isNullOrEmpty()) {
+                                databaseReference.child(DATABASE_ROOT_MESSAGES).child(user.uid).child("0").setValue(message)
+                                databaseReference.removeEventListener(this)
+                            } else {
+                                databaseReference.child(DATABASE_ROOT_MESSAGES).child(user.uid).child(messages?.size.toString()).setValue(message)
+                                databaseReference.removeEventListener(this)
+                            }
+
                             emitter.onNext(Message(user.uid, message))
                         }
                     }

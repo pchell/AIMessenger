@@ -40,18 +40,18 @@ class RoomFragment : Fragment() {
 
         viewModel.checkRoomChanges(args.roomId, false)
 
-        room_message.setOnTouchListener(object : View.OnTouchListener {
-            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                when (event?.action) {
-                    MotionEvent.ACTION_UP ->
-                        if(event.getX() >= (room_message.getRight() - room_message.getCompoundDrawables()[2].getBounds().width())){
-                            viewModel.sendRoomMessage(args.roomId, false, room_message.text.toString())
-                        }
-                }
+        room_message.setOnTouchListener { v, event ->
+            when (event?.action) {
+                MotionEvent.ACTION_UP ->
+                    if (event.rawX >= (room_message.right - room_message.compoundDrawables[2].bounds.width())) {
+                        viewModel.sendRoomMessage(args.roomId, false, room_message.text.toString())
+                        println(room_message.text.toString())
+                    }
 
-                return v?.onTouchEvent(event) ?: true
             }
-        })
+            v.performClick()
+            v?.onTouchEvent(event) ?: true
+        }
 
     }
 
