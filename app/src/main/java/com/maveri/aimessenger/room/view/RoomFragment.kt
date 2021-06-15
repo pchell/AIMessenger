@@ -41,17 +41,16 @@ class RoomFragment : Fragment() {
         viewModel.checkRoomChanges(args.roomId, false)
 
         room_message.setOnTouchListener { v, event ->
-            when (event?.action) {
-                MotionEvent.ACTION_UP ->
-                    if (event.rawX >= (room_message.right - room_message.compoundDrawables[2].bounds.width())) {
-                        viewModel.sendRoomMessage(args.roomId, false, room_message.text.toString())
-                        println(room_message.text.toString())
-                    }
-
+            if(event.action == MotionEvent.ACTION_UP){
+                if(event.rawX >= (room_message.right - room_message.compoundDrawables[2].bounds.width())){
+                    viewModel.sendRoomMessage(args.roomId, false, room_message.text.toString())
+                    room_message.setText("")
+                }
             }
-            v.performClick()
-            v?.onTouchEvent(event) ?: true
+            false
         }
+
+
 
     }
 
