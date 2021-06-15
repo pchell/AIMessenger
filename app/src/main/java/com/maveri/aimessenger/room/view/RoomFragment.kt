@@ -1,5 +1,6 @@
 package com.maveri.aimessenger.room.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -31,6 +32,7 @@ class RoomFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -39,11 +41,12 @@ class RoomFragment : Fragment() {
         })
 
         viewModel.checkRoomChanges(args.roomId, false)
+        viewModel.getRoomMessages(args.roomId, false)
 
         room_message.setOnTouchListener { v, event ->
             if(event.action == MotionEvent.ACTION_UP){
                 if(event.rawX >= (room_message.right - room_message.compoundDrawables[2].bounds.width())){
-                    if(room_message.text.trim().length>0) {
+                    if(room_message.text.trim().isNotEmpty()) {
                         viewModel.sendRoomMessage(args.roomId, false, room_message.text.toString())
                         room_message.setText("")
                     }
@@ -51,8 +54,6 @@ class RoomFragment : Fragment() {
             }
             false
         }
-
-
 
     }
 

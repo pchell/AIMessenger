@@ -154,51 +154,44 @@ class FirebaseRepository @Inject constructor(
         }
     }
 
-//    fun getRoomMessages(roomId: String, isCheckRoomConnections: Boolean): Observable<Message> {
-//        return Observable.create { emitter ->
-//            firebaseAuth.currentUser?.let { user ->
-//                val databaseReference =
-//                    firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
-//                databaseReference.addValueEventListener(object : ValueEventListener {
-//                    override fun onDataChange(snapshot: DataSnapshot) {
-//                        if (snapshot.value != null) {
-//                            val message =
-//                                (snapshot.value as HashMap<String, HashMap<*, *>>)[DATABASE_ROOT_MESSAGES]?.let {
-//                                    it.filterKeys { item ->
-//                                        !item.equals(user.uid)
-//                                    }
-//                                }
-//
-//
-//
-//                            if (!message.isNullOrEmpty()) {
-//                                if (isCheckRoomConnections) {
-//                                    databaseReference.removeEventListener(this)
-//                                    emitter.onNext(Room(roomId, true))
-//                                }
-//                            } else if (!isCheckRoomConnections) {
-//                                databaseReference.removeEventListener(this)
-//                                emitter.onNext(Room(roomId, isDisconnect = true))
-//                            }
-//                        }
-//                    }
-//
-//                    override fun onCancelled(error: DatabaseError) {
-//                        databaseReference.removeEventListener(this)
-//                        emitter.onError(error.toException())
-//                    }
-//                })
-//
-//            }
-//        }
-//    }
+    fun getRoomMessages(roomId: String, isCheckRoomConnections: Boolean): Observable<Message> {
+        return Observable.create { emitter ->
+            firebaseAuth.currentUser?.let { user ->
+                val databaseReference =
+                    firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId).child(DATABASE_ROOT_MESSAGES).orderByKey().limitToLast(1)
+                databaseReference.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.value != null) {
+                            val message = snapshot.value?.let { value ->
+                                (value as HashMap<String, HashMap<*, *>>)
+                            }
+
+                            //databaseReference.removeEventListener(this)
+
+                            if(!message?.values?.last()?.filterKeys { it == user.uid }.isNullOrEmpty()){
+                                emitter.onNext(Message("my", message?.values?.last()?.values.toString()))
+                            }else{
+                                emitter.onNext(Message("user", message?.values?.last()?.values.toString()))
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        databaseReference.removeEventListener(this)
+                        emitter.onError(error.toException())
+                    }
+                })
+
+            }
+        }
+    }
 
     fun sendRoomMessage(roomId: String, isCheckRoomConnections: Boolean, message: String): Observable<Message> {
         return Observable.create { emitter ->
             firebaseAuth.currentUser?.let { user ->
                 val databaseReference =
                     firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
-                            databaseReference.child(DATABASE_ROOT_MESSAGES).child(user.uid).push().setValue(message)
+                            databaseReference.child(DATABASE_ROOT_MESSAGES).push().child(user.uid).setValue(message)
                             emitter.onNext(Message(user.uid, message))
             }
         }

@@ -39,6 +39,28 @@ class RoomViewModel @Inject constructor(private val firebaseRepository: Firebase
             })
     }
 
+    fun getRoomMessages(roomId: String, isCheckRoomConnections: Boolean) {
+        firebaseRepository.getRoomMessages(roomId, isCheckRoomConnections)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Message> {
+                override fun onSubscribe(item: Disposable) {
+                }
+
+                override fun onNext(message: Message) {
+                    viewState.value = RoomViewState.State(message = message)
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+
+                override fun onComplete() {
+
+                }
+            })
+    }
+
     fun disconnectFromRoom(roomId: String) {
         firebaseRepository.disconnectFromRoom(roomId)
             .subscribeOn(Schedulers.io())
