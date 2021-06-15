@@ -198,30 +198,8 @@ class FirebaseRepository @Inject constructor(
             firebaseAuth.currentUser?.let { user ->
                 val databaseReference =
                     firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
-                databaseReference.addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.value != null) {
-                            val messages =
-                                (snapshot.value as HashMap<String, HashMap<*, *>>)[DATABASE_ROOT_MESSAGES]//Нужно получить под ветку сообщений для пользователя, я хз как!!!
-
-                            if (messages.isNullOrEmpty()) {
-                                databaseReference.child(DATABASE_ROOT_MESSAGES).child(user.uid).child("0").setValue(message)
-                                databaseReference.removeEventListener(this)
-                            } else {
-                                databaseReference.child(DATABASE_ROOT_MESSAGES).child(user.uid).child(messages?.size.toString()).setValue(message)
-                                databaseReference.removeEventListener(this)
-                            }
-
+                            databaseReference.child(DATABASE_ROOT_MESSAGES).child(user.uid).push().setValue(message)
                             emitter.onNext(Message(user.uid, message))
-                        }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        databaseReference.removeEventListener(this)
-                        emitter.onError(error.toException())
-                    }
-                })
-
             }
         }
     }
