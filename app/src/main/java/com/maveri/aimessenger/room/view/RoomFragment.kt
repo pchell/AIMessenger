@@ -41,20 +41,21 @@ class RoomFragment : Fragment() {
         })
 
         viewModel.checkRoomChanges(args.roomId, false)
-        viewModel.getRoomMessages(args.roomId, false)
+        viewModel.getRoomMessages(args.roomId)
 
-        room_message.setOnTouchListener { v, event ->
-            if(event.action == MotionEvent.ACTION_UP){
-                if(event.rawX >= (room_message.right - room_message.compoundDrawables[2].bounds.width())){
-                    if(room_message.text.trim().isNotEmpty()) {
-                        viewModel.sendRoomMessage(args.roomId, false, room_message.text.toString())
-                        room_message.setText("")
+        binding.roomMessage.apply {
+            setOnTouchListener { v, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    if (event.rawX >= (right - compoundDrawables[2].bounds.width())) {
+                        if (text.trim().isNotEmpty()) {
+                            viewModel.sendRoomMessage(args.roomId, text.toString())
+                            text.clear()
+                        }
                     }
                 }
+                false
             }
-            false
         }
-
     }
 
     private fun render(viewState: RoomViewState.State) {

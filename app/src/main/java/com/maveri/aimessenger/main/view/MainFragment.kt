@@ -64,7 +64,7 @@ class MainFragment : Fragment() {
                     searchDialog?.show(parentFragmentManager, null)
                 }
             }
-                //Toast.makeText(context, viewState.token, Toast.LENGTH_LONG).show()
+            //Toast.makeText(context, viewState.token, Toast.LENGTH_LONG).show()
         } else {
             when (viewState?.authStatus) {
                 is MainViewState.AuthFirebaseStatus.Success -> binding.mainStartSearchButton.isEnabled =

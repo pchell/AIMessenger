@@ -9,7 +9,7 @@ import com.maveri.aimessenger.model.Message
 import com.maveri.aimessenger.model.Room
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -37,11 +37,11 @@ class FirebaseRepository @Inject constructor(
                         emitter.onError(it.exception)
                     }
                 }
-        }.subscribeOn(Schedulers.single());
+        }
     }
 
-    fun startUserSearch(): Observable<Room> {
-        return Observable.create { emitter ->
+    fun startUserSearch(): Single<Room> {
+        return Single.create { emitter ->
             firebaseAuth.currentUser?.let { user ->
                 val databaseReference = firebaseDatabase.getReference(DATABASE_ROOT_ROOMS)
                 databaseReference.addValueEventListener(object : ValueEventListener {
@@ -57,14 +57,14 @@ class FirebaseRepository @Inject constructor(
                         if (keys.isNotEmpty()) {
                             databaseReference.child(keys[0]).child(DATABASE_ROOT_USERS)
                                 .child(user.uid).setValue(true)
-                            emitter.onNext(Room(keys[0], true))
+                            emitter.onSuccess(Room(keys[0], true))
                         } else {
                             val personalRoomId =
                                 user.uid + Random.nextInt(MIN_RANDOM_NUMBER, MAX_RANDOM_NUMBER)
                             databaseReference.child(personalRoomId).child(DATABASE_ROOT_USERS)
                                 .child(user.uid)
                                 .setValue(true)
-                            emitter.onNext(Room(personalRoomId))
+                            emitter.onSuccess(Room(personalRoomId))
                         }
 
                     }
@@ -79,8 +79,8 @@ class FirebaseRepository @Inject constructor(
         }
     }
 
-    fun checkRoomChanges(roomId: String, isCheckRoomConnections: Boolean): Observable<Room> {
-        return Observable.create { emitter ->
+    fun checkRoomChanges(roomId: String, isCheckRoomConnections: Boolean): Single<Room> {
+        return Single.create { emitter ->
             firebaseAuth.currentUser?.let { user ->
                 val databaseReference =
                     firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
@@ -97,11 +97,11 @@ class FirebaseRepository @Inject constructor(
                             if (!keys.isNullOrEmpty()) {
                                 if (isCheckRoomConnections) {
                                     databaseReference.removeEventListener(this)
-                                    emitter.onNext(Room(roomId, true))
+                                    emitter.onSuccess(Room(roomId, true))
                                 }
                             } else if (!isCheckRoomConnections) {
                                 databaseReference.removeEventListener(this)
-                                emitter.onNext(Room(roomId, isDisconnect = true))
+                                emitter.onSuccess(Room(roomId, isDisconnect = true))
                             }
                         }
                     }
@@ -116,8 +116,8 @@ class FirebaseRepository @Inject constructor(
         }
     }
 
-    fun disconnectFromRoom(roomId: String): Observable<Room> {
-        return Observable.create { emitter ->
+    fun disconnectFromRoom(roomId: String): Single<Room> {
+        return Single.create { emitter ->
             firebaseAuth.currentUser?.let { user ->
                 val databaseReference =
                     firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
@@ -135,11 +135,11 @@ class FirebaseRepository @Inject constructor(
 
                             if (keys.isNullOrEmpty()) {
                                 databaseReference.removeValue()
-                                emitter.onNext(Room(roomId, isDisconnect = true))
+                                emitter.onSuccess(Room(roomId, isDisconnect = true))
                             } else {
                                 databaseReference.child(DATABASE_ROOT_USERS).child(user.uid)
                                     .removeValue()
-                                emitter.onNext(Room(roomId, isDisconnect = true))
+                                emitter.onSuccess(Room(roomId, isDisconnect = true))
                             }
                         }
                     }
@@ -154,45 +154,61 @@ class FirebaseRepository @Inject constructor(
         }
     }
 
-    fun getRoomMessages(roomId: String, isCheckRoomConnections: Boolean): Observable<Message> {
-        return Observable.create { emitter ->
-            firebaseAuth.currentUser?.let { user ->
-                val databaseReference =
-                    firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId).child(DATABASE_ROOT_MESSAGES).orderByKey().limitToLast(1)
-                databaseReference.addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.value != null) {
-                            val message = snapshot.value?.let { value ->
-                                (value as HashMap<String, HashMap<*, *>>)
-                            }
-
-                            //databaseReference.removeEventListener(this)
-
-                            if(!message?.values?.last()?.filterKeys { it == user.uid }.isNullOrEmpty()){
-                                emitter.onNext(Message("my", message?.values?.last()?.values.toString()))
-                            }else{
-                                emitter.onNext(Message("user", message?.values?.last()?.values.toString()))
-                            }
-                        }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        databaseReference.removeEventListener(this)
-                        emitter.onError(error.toException())
-                    }
-                })
-
-            }
-        }
-    }
-
-    fun sendRoomMessage(roomId: String, isCheckRoomConnections: Boolean, message: String): Observable<Message> {
+    fun getRoomMessages(roomId: String): Observable<List<Message>> {
         return Observable.create { emitter ->
             firebaseAuth.currentUser?.let { user ->
                 val databaseReference =
                     firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
-                            databaseReference.child(DATABASE_ROOT_MESSAGES).push().child(user.uid).setValue(message)
-                            emitter.onNext(Message(user.uid, message))
+                        .child(DATABASE_ROOT_MESSAGES)
+                databaseReference.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.value != null) {
+                            val allMessages = snapshot.value?.let { value ->
+                                (value as HashMap<String, HashMap<*, *>>).values
+                            } ?: emptyList()
+                            val sortMessages: MutableList<Message> = mutableListOf()
+                            if (allMessages.isNotEmpty()) {
+                                allMessages.forEach {
+                                    val item =
+                                        it.entries.first() as MutableMap.MutableEntry<String, String>
+                                    if (item.key == user.uid) {
+                                        sortMessages.add(
+                                            Message.User(item.value)
+                                        )
+                                    } else {
+                                        sortMessages.add(
+                                            Message.Other(item.value)
+                                        )
+                                    }
+                                }
+                            }
+                            emitter.onNext(sortMessages)
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        databaseReference.removeEventListener(this)
+                        emitter.onError(error.toException())
+                    }
+                })
+
+            }
+        }
+    }
+
+    fun sendRoomMessage(roomId: String, message: String): Completable {
+        return Completable.create { emitter ->
+            firebaseAuth.currentUser?.let { user ->
+                val databaseReference =
+                    firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
+                databaseReference.child(DATABASE_ROOT_MESSAGES).push().child(user.uid)
+                    .setValue(message).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            emitter.onComplete()
+                        } else {
+                            emitter.onError(it.exception)
+                        }
+                    }
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.maveri.aimessenger.model
 
-data class Message(
-    val key: String,
-    val message: String
-)
+sealed class Message(val message: String) {
+    class User(message: String) : Message(message)
+    class Other(message: String) : Message(message)
+}
+

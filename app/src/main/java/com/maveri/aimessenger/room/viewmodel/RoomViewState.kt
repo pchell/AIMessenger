@@ -6,6 +6,6 @@ import com.maveri.aimessenger.model.Room
 interface RoomViewState {
     data class State(
         val room: Room? = null,
-        val message: Message? = null
+        val message: List<Message>? = null
     )
 }
