@@ -1,10 +1,7 @@
 package com.maveri.aimessenger.repository
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.maveri.aimessenger.model.Message
 import com.maveri.aimessenger.model.Room
 import io.reactivex.rxjava3.core.Completable
@@ -22,6 +19,7 @@ class FirebaseRepository @Inject constructor(
         const val DATABASE_ROOT_ROOMS = "rooms"
         const val DATABASE_ROOT_USERS = "users"
         const val DATABASE_ROOT_MESSAGES = "message"
+        const val DATABASE_ROOT_TIMESTAMP = "timestamp"
 
         const val MIN_RANDOM_NUMBER = 0
         const val MAX_RANDOM_NUMBER = 100000
@@ -169,19 +167,25 @@ class FirebaseRepository @Inject constructor(
                             val sortMessages: MutableList<Message> = mutableListOf()
                             if (allMessages.isNotEmpty()) {
                                 allMessages.forEach {
-                                    val item =
+                                    val messageItem =
                                         it.entries.first() as MutableMap.MutableEntry<String, String>
-                                    if (item.key == user.uid) {
-                                        sortMessages.add(
-                                            Message.User(item.value)
-                                        )
-                                    } else {
-                                        sortMessages.add(
-                                            Message.Other(item.value)
-                                        )
+                                    val timestampItem = it[DATABASE_ROOT_TIMESTAMP] as? Long
+
+                                    if (timestampItem != null) {
+                                        if (messageItem.key == user.uid) {
+                                            sortMessages.add(
+                                                Message.User(messageItem.value, timestampItem)
+                                            )
+                                        } else {
+                                            sortMessages.add(
+                                                Message.Other(messageItem.value, timestampItem)
+                                            )
+                                        }
                                     }
                                 }
                             }
+
+                            sortMessages.sortBy { message -> message.timestamp }
                             emitter.onNext(sortMessages)
                         }
                     }
@@ -201,14 +205,17 @@ class FirebaseRepository @Inject constructor(
             firebaseAuth.currentUser?.let { user ->
                 val databaseReference =
                     firebaseDatabase.getReference(DATABASE_ROOT_ROOMS).child(roomId)
-                databaseReference.child(DATABASE_ROOT_MESSAGES).push().child(user.uid)
-                    .setValue(message).addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            emitter.onComplete()
-                        } else {
-                            emitter.onError(it.exception)
+                databaseReference.child(DATABASE_ROOT_MESSAGES).push().apply {
+                    child(user.uid).setValue(message)
+                    child(DATABASE_ROOT_TIMESTAMP).setValue(ServerValue.TIMESTAMP)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                emitter.onComplete()
+                            } else {
+                                emitter.onError(it.exception)
+                            }
                         }
-                    }
+                }
             }
         }
     }

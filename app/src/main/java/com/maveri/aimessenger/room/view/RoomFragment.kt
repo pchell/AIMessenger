@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.maveri.aimessenger.databinding.RoomFragmentBinding
 import com.maveri.aimessenger.room.viewmodel.RoomViewModel
 import com.maveri.aimessenger.room.viewmodel.RoomViewState
+import com.maveri.aimessenger.room.widget.RoomMessageAdapter
 import com.maveri.aimessenger.room.widget.RoomStateDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.room_fragment.*
@@ -22,6 +23,8 @@ class RoomFragment : Fragment() {
     private lateinit var binding: RoomFragmentBinding
     private val viewModel by viewModels<RoomViewModel>()
     private val args by navArgs<RoomFragmentArgs>()
+
+    private val adapter = RoomMessageAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +38,8 @@ class RoomFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.roomMessagesList.adapter = adapter
 
         viewModel.viewState.observe(viewLifecycleOwner, {
             it?.let { render(it) }
@@ -69,6 +74,9 @@ class RoomFragment : Fragment() {
                         }
                     ).build().show(parentFragmentManager, null)
             }
+        }
+        if (!viewState.message.isNullOrEmpty()) {
+            adapter.submitList(viewState.message)
         }
     }
 

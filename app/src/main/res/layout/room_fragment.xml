@@ -13,7 +13,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/my_message_item"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/message_user_item"/>
 
     <View
         android:id="@+id/room_divider"
@@ -28,18 +29,16 @@
         android:id="@+id/room_message"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginHorizontal="@dimen/margin_10"
         android:layout_centerVertical="true"
         android:background="@android:color/transparent"
         android:hint="@string/room_message"
         android:inputType="text"
-        android:padding="@dimen/padding_15"
         android:drawableEnd="@drawable/ic_send"
         android:drawableTint="?attr/colorPrimary"
         android:maxLines="6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

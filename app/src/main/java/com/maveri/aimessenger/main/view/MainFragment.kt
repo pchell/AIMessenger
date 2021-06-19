@@ -51,8 +51,8 @@ class MainFragment : Fragment() {
                     searchDialog?.dismiss()
                 }
                 viewState.room.isReadyStart -> {
-                    searchDialog?.dismiss()
                     findNavController().navigate(MainFragmentDirections.toChat(roomId = viewState.room.roomId))
+                    searchDialog?.dismiss()
                 }
                 else -> {
                     viewModel.checkRoomChanges(viewState.room.roomId, true)
@@ -64,7 +64,6 @@ class MainFragment : Fragment() {
                     searchDialog?.show(parentFragmentManager, null)
                 }
             }
-            //Toast.makeText(context, viewState.token, Toast.LENGTH_LONG).show()
         } else {
             when (viewState?.authStatus) {
                 is MainViewState.AuthFirebaseStatus.Success -> binding.mainStartSearchButton.isEnabled =
