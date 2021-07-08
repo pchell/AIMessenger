@@ -33,10 +33,10 @@ class RoomMessageAdapter : ListAdapter<Message, RoomMessageViewHolder>(DIFF_CALL
 
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Message>() {
             override fun areItemsTheSame(oldItem: Message, newItem: Message) =
-                oldItem == newItem
+                oldItem.message == newItem.message
 
             override fun areContentsTheSame(oldItem: Message, newItem: Message) =
-                oldItem == newItem
+                oldItem.message == newItem.message
         }
     }
 }

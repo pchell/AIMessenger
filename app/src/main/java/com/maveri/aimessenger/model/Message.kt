@@ -5,3 +5,5 @@ sealed class Message(val message: String, val timestamp: Long) {
     class Other(message: String, timestamp: Long) : Message(message, timestamp)
 }
 
+
+

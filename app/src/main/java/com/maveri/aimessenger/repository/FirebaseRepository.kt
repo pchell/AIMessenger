@@ -36,7 +36,7 @@ class FirebaseRepository @Inject constructor(
                     }
                 }
         }
-    }
+     }
 
     fun startUserSearch(): Single<Room> {
         return Single.create { emitter ->
