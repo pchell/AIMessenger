@@ -26,8 +26,9 @@ class MessageUserItemView
     }
 
     fun setItem(item: Message) {
-        val date = SpannableString(item.message.plus(" ").plus(SimpleDateFormat("HH:mm").format(Date())))
-        date.setSpan(RelativeSizeSpan(0.5f), item.message.length+1, item.message.length+6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        binding.messageUserText.text = date
+        val date = SpannableString(SimpleDateFormat("HH:mm").format(Date()))
+        date.setSpan(RelativeSizeSpan(0.5f), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.messageUserText.text = item.message
+        binding.messageUserTime.text = date
     }
 }

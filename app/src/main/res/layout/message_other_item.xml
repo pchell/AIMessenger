@@ -45,27 +45,25 @@
                 android:id="@+id/message_other_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_8"
                 android:maxWidth="@dimen/max_message_width"
                 android:paddingLeft="@dimen/padding_12"
-                android:paddingTop="@dimen/padding_8"
                 android:paddingRight="@dimen/padding_12"
+                android:paddingTop="@dimen/padding_8"
                 android:textColor="@color/black"
                 tools:text="Сообщение" />
+
+            <TextView
+                android:id="@+id/message_other_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/max_message_width"
+                android:paddingRight="@dimen/padding_12"
+                android:paddingLeft="@dimen/padding_12"
+                android:paddingBottom="@dimen/padding_2"
+                android:layout_gravity="right"
+                android:textColor="@color/black"/>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/message_other_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="?attr/colorDateTime"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/message_other_card"
-        app:layout_constraintStart_toEndOf="@+id/message_other_card"
-        tools:text="10:00"
-        tools:textSize="@dimen/text_size_10" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
