@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.maveri.aimessenger.databinding.RoomFragmentBinding
 import com.maveri.aimessenger.room.viewmodel.RoomViewModel
 import com.maveri.aimessenger.room.viewmodel.RoomViewState
@@ -77,6 +79,11 @@ class RoomFragment : Fragment() {
         }
         if (!viewState.message.isNullOrEmpty()) {
             adapter.submitList(viewState.message)
+            adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    (binding.roomMessagesList.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(positionStart, 0)
+                }
+            })
         }
     }
 
