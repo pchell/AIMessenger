@@ -1,5 +1,6 @@
 package com.maveri.aimessenger.repository
 
+import android.text.SpannableString
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.maveri.aimessenger.model.Message
@@ -7,7 +8,10 @@ import com.maveri.aimessenger.model.Room
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 import kotlin.random.Random
 
 class FirebaseRepository @Inject constructor(
@@ -166,20 +170,46 @@ class FirebaseRepository @Inject constructor(
                             } ?: emptyList()
                             val sortMessages: MutableList<Message> = mutableListOf()
                             if (allMessages.isNotEmpty()) {
-                                allMessages.forEach {
+                                var previosDay: Int? = null
+                                allMessages.forEachIndexed {index, element ->
                                     val messageItem =
-                                        it.entries.first() as MutableMap.MutableEntry<String, String>
-                                    val timestampItem = it[DATABASE_ROOT_TIMESTAMP] as? Long
+                                        element.entries.first() as MutableMap.MutableEntry<String, String>
+                                    val timestampItem = element[DATABASE_ROOT_TIMESTAMP] as? Long
+                                    var day: Int = 0
+                                    if (timestampItem != null) {
+                                        day = Integer.parseInt(SimpleDateFormat("dd")
+                                            .format(Date(timestampItem)))
+                                    }
 
                                     if (timestampItem != null) {
                                         if (messageItem.key == user.uid) {
+                                            if(allMessages.size==1){
                                             sortMessages.add(
-                                                Message.User(messageItem.value, timestampItem)
-                                            )
+                                                Message.User(messageItem.value, timestampItem, true)
+                                            )}else{
+                                                if(index.equals((allMessages.size-1).toString()) && previosDay!=day){
+                                                    sortMessages.add(
+                                                        Message.User(messageItem.value, timestampItem, true))
+                                                }else{
+                                                    sortMessages.add(
+                                                        Message.User(messageItem.value, timestampItem))
+                                                }
+                                                }
+                                            previosDay = day
                                         } else {
-                                            sortMessages.add(
-                                                Message.Other(messageItem.value, timestampItem)
-                                            )
+                                            if(allMessages.size==1){
+                                                sortMessages.add(
+                                                    Message.Other(messageItem.value, timestampItem, true)
+                                                )}else{
+                                                if(index.equals((allMessages.size-1).toString()) && previosDay!=day){
+                                                    sortMessages.add(
+                                                        Message.Other(messageItem.value, timestampItem, true))
+                                                }else{
+                                                    sortMessages.add(
+                                                        Message.Other(messageItem.value, timestampItem))
+                                                }
+                                            }
+                                            previosDay = day
                                         }
                                     }
                                 }
