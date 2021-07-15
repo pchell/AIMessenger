@@ -91,6 +91,7 @@ class RoomFragment : Fragment() {
         super.onDestroyView()
         viewModel.viewState.value = null
         viewModel.viewState.removeObservers(viewLifecycleOwner)
+        viewModel.disconnectFromRoom(args.roomId)
     }
 }
 
