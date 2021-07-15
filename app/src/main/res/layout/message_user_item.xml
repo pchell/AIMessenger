@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/margin_50"
+    android:layout_marginStart="@dimen/margin_8"
     android:layout_marginTop="@dimen/margin_8"
     android:layout_marginEnd="@dimen/margin_8">
 
@@ -12,7 +12,6 @@
         android:id="@+id/message_user_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_32"
         android:paddingStart="@dimen/padding_8"
         android:paddingTop="@dimen/padding_5"
         android:paddingEnd="@dimen/padding_8"
