@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="header_room">Room</string>
+
     <string name="chat_disconnect_title">Упс…\nСобеседник отключился</string>
     <string name="chat_disconnect">Отключиться</string>
     <string name="room_message">Сообщение...</string>

@@ -14,9 +14,12 @@
 
     <dimen name="text_size_10">10sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
 
     <dimen name="divider_height">1dp</dimen>
     <dimen name="message_card_radius">12dp</dimen>
     <dimen name="max_message_width">260dp</dimen>
+
+    <dimen name="content_padding">20dp</dimen>
 
 </resources>

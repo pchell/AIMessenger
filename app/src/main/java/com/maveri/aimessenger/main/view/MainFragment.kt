@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.maveri.aimessenger.R
 import com.maveri.aimessenger.databinding.MainFragmentBinding
 import com.maveri.aimessenger.main.viewmodel.MainViewModel
 import com.maveri.aimessenger.main.viewmodel.MainViewState
@@ -32,6 +33,8 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.headerView.setHeaderTitle(getString(R.string.header_main))
 
         viewModel.viewState.observe(viewLifecycleOwner, {
             it?.let { render(it) }

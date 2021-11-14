@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.maveri.aimessenger.R
 import com.maveri.aimessenger.databinding.RoomFragmentBinding
 import com.maveri.aimessenger.room.viewmodel.RoomViewModel
 import com.maveri.aimessenger.room.viewmodel.RoomViewState
@@ -39,6 +40,8 @@ class RoomFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.headerView.setHeaderTitle(getString(R.string.header_room))
+
         binding.roomMessagesList.adapter = adapter
 
         viewModel.viewState.observe(viewLifecycleOwner, {
@@ -49,7 +52,7 @@ class RoomFragment : Fragment() {
         viewModel.getRoomMessages(args.roomId)
 
         binding.roomMessage.apply {
-            setOnTouchListener { v, event ->
+            setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
                     if (event.rawX >= (right - compoundDrawables[2].bounds.width())) {
                         if (text.trim().isNotEmpty()) {
