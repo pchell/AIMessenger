@@ -1,6 +1,5 @@
 package com.maveri.aimessenger.repository
 
-import android.text.SpannableString
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.maveri.aimessenger.model.Message
@@ -18,16 +17,6 @@ class FirebaseRepository @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase,
     private val firebaseAuth: FirebaseAuth
 ) {
-
-    companion object {
-        const val DATABASE_ROOT_ROOMS = "rooms"
-        const val DATABASE_ROOT_USERS = "users"
-        const val DATABASE_ROOT_MESSAGES = "message"
-        const val DATABASE_ROOT_TIMESTAMP = "timestamp"
-
-        const val MIN_RANDOM_NUMBER = 0
-        const val MAX_RANDOM_NUMBER = 100000
-    }
 
     fun signInAnonymously(): Completable {
         return Completable.create { emitter ->
@@ -175,9 +164,9 @@ class FirebaseRepository @Inject constructor(
                                     val messageItem =
                                         element.entries.first() as MutableMap.MutableEntry<String, String>
                                     val timestampItem = element[DATABASE_ROOT_TIMESTAMP] as? Long
-                                    var day: Int = 0
+                                    var day = 0
                                     if (timestampItem != null) {
-                                        day = Integer.parseInt(SimpleDateFormat("dd")
+                                        day = Integer.parseInt(SimpleDateFormat(DAY_DATE_FORMAT)
                                             .format(Date(timestampItem)))
                                     }
 
@@ -248,5 +237,17 @@ class FirebaseRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    private companion object {
+        const val DATABASE_ROOT_ROOMS = "rooms"
+        const val DATABASE_ROOT_USERS = "users"
+        const val DATABASE_ROOT_MESSAGES = "message"
+        const val DATABASE_ROOT_TIMESTAMP = "timestamp"
+
+        const val MIN_RANDOM_NUMBER = 0
+        const val MAX_RANDOM_NUMBER = 100000
+
+        const val DAY_DATE_FORMAT = "dd"
     }
 }

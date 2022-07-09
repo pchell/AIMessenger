@@ -1,9 +1,8 @@
-package com.maveri.aimessenger.main.viewmodel
+package com.maveri.aimessenger.main.presentation
 
-import com.maveri.aimessenger.model.Message
 import com.maveri.aimessenger.model.Room
 
-interface MainViewState {
+class MainViewState private constructor() {
     data class State(
         val authStatus: AuthFirebaseStatus? = null,
         val room: Room? = null,
@@ -14,5 +13,4 @@ interface MainViewState {
         object Success : AuthFirebaseStatus()
         object Error : AuthFirebaseStatus()
     }
-
 }

@@ -1,4 +1,4 @@
-package com.maveri.aimessenger.room.viewmodel
+package com.maveri.aimessenger.room.presentation
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -18,11 +18,10 @@ import javax.inject.Inject
 @HiltViewModel
 class RoomViewModel @Inject constructor(private val firebaseRepository: FirebaseRepository) :
     ViewModel() {
-    val viewState: MutableLiveData<RoomViewState.State> = MutableLiveData()
 
-    companion object {
-        const val TAG = "RoomViewModel"
-    }
+    private val TAG = RoomViewModel::class.java.simpleName
+
+    val viewState: MutableLiveData<RoomViewState.State> = MutableLiveData()
 
     fun checkRoomChanges(roomId: String, isCheckRoomConnections: Boolean) {
         firebaseRepository.checkRoomChanges(roomId, isCheckRoomConnections)
@@ -36,7 +35,6 @@ class RoomViewModel @Inject constructor(private val firebaseRepository: Firebase
                 override fun onError(e: Throwable) {
                     Log.e(TAG, e.stackTraceToString())
                 }
-
             })
     }
 
@@ -74,7 +72,6 @@ class RoomViewModel @Inject constructor(private val firebaseRepository: Firebase
                 override fun onError(e: Throwable) {
                     Log.e(TAG, e.stackTraceToString())
                 }
-
             })
     }
 
@@ -91,7 +88,6 @@ class RoomViewModel @Inject constructor(private val firebaseRepository: Firebase
                 override fun onError(e: Throwable) {
                     Log.e(TAG, e.stackTraceToString())
                 }
-
             })
     }
 }

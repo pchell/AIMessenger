@@ -30,9 +30,7 @@ class RoomStateDialogFragment : DialogFragment() {
         }
     }
 
-    class Builder(
-        val clickListener: View.OnClickListener? = null,
-    ) {
+    class Builder(val clickListener: View.OnClickListener? = null) {
         fun build(): RoomStateDialogFragment {
             return RoomStateDialogFragment().apply {
                 buttonOnClickListener = clickListener

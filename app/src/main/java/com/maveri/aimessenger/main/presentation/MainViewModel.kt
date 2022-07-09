@@ -1,4 +1,4 @@
-package com.maveri.aimessenger.main.viewmodel
+package com.maveri.aimessenger.main.presentation
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -16,11 +16,9 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(private val firebaseRepository: FirebaseRepository) :
     ViewModel() {
 
-    val viewState: MutableLiveData<MainViewState.State> = MutableLiveData()
+    private val TAG = MainViewModel::class.java.simpleName
 
-    companion object {
-        const val TAG = "MainViewModel"
-    }
+    val viewState: MutableLiveData<MainViewState.State> = MutableLiveData()
 
     fun signInAnonymously() {
         firebaseRepository.signInAnonymously()
@@ -28,13 +26,11 @@ class MainViewModel @Inject constructor(private val firebaseRepository: Firebase
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : DisposableCompletableObserver() {
                 override fun onComplete() {
-                    viewState.value =
-                        MainViewState.State(authStatus = MainViewState.AuthFirebaseStatus.Success)
+                    viewState.value = MainViewState.State(authStatus = MainViewState.AuthFirebaseStatus.Success)
                 }
 
-                override fun onError(e: Throwable?) {
-                    viewState.value =
-                        MainViewState.State(authStatus = MainViewState.AuthFirebaseStatus.Error)
+                override fun onError(e: Throwable) {
+                    viewState.value = MainViewState.State(authStatus = MainViewState.AuthFirebaseStatus.Error)
                 }
 
             })

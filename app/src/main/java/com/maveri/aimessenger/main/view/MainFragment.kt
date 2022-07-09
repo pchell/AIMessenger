@@ -4,13 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.maveri.aimessenger.databinding.MainFragmentBinding
-import com.maveri.aimessenger.main.viewmodel.MainViewModel
-import com.maveri.aimessenger.main.viewmodel.MainViewState
+import com.maveri.aimessenger.main.presentation.MainViewModel
+import com.maveri.aimessenger.main.presentation.MainViewState
 import com.maveri.aimessenger.main.widget.SearchDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,9 +32,9 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.viewState.observe(viewLifecycleOwner, {
+        viewModel.viewState.observe(viewLifecycleOwner) {
             it?.let { render(it) }
-        })
+        }
 
         viewModel.signInAnonymously()
 
@@ -66,16 +65,17 @@ class MainFragment : Fragment() {
             }
         } else {
             when (viewState?.authStatus) {
-                is MainViewState.AuthFirebaseStatus.Success -> binding.mainStartSearchButton.isEnabled =
-                    true
-                is MainViewState.AuthFirebaseStatus.Error -> binding.mainStartSearchButton.isEnabled =
-                    false
+                is MainViewState.AuthFirebaseStatus.Success ->
+                    binding.mainStartSearchButton.isEnabled = true
+                is MainViewState.AuthFirebaseStatus.Error ->
+                    binding.mainStartSearchButton.isEnabled = false
             }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         viewModel.viewState.value = null
         viewModel.viewState.removeObservers(viewLifecycleOwner)
     }

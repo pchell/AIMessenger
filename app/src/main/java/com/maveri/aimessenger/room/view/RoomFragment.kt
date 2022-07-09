@@ -13,8 +13,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.maveri.aimessenger.databinding.RoomFragmentBinding
-import com.maveri.aimessenger.room.viewmodel.RoomViewModel
-import com.maveri.aimessenger.room.viewmodel.RoomViewState
+import com.maveri.aimessenger.room.presentation.RoomViewModel
+import com.maveri.aimessenger.room.presentation.RoomViewState
 import com.maveri.aimessenger.room.widget.RoomMessageAdapter
 import com.maveri.aimessenger.room.widget.RoomStateDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,9 +43,9 @@ class RoomFragment : Fragment() {
 
         binding.roomMessagesList.adapter = adapter
 
-        viewModel.viewState.observe(viewLifecycleOwner, {
+        viewModel.viewState.observe(viewLifecycleOwner) {
             it?.let { render(it) }
-        })
+        }
 
         viewModel.checkRoomChanges(args.roomId, false)
         viewModel.getRoomMessages(args.roomId)
